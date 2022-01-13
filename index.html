@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/fantasque-sans-mono" type="text/css"/>
+    <link rel="stylesheet" href="css/style.css">
+    <title>Notes App</title>
+</head>
+
+<body>
+    <header>
+        <i class="ri-add-fill header__add-button"></i>
+        <div id="header__search-input"><input type="search" placeholder="Search for a note"><span
+                id="header__search-icon"><i class="ri-search-line"></i></span></div>
+        <div id="tags-container">
+            <span>Tags</span>
+            <div id="tags__grid">
+                <button id="tag__add"><i class="ri-add-line"></i></button>
+                <div class="tag__box">
+                    <i class="ri-price-tag-3-fill tag__icon"></i>
+                    <ul class="tag__menu hidden">
+                        <li class="tag__item"><i class="ri-edit-fill"></i> Edit</li>
+                        <li class="tag__item"><i class="ri-delete-bin-7-fill"></i> Trash</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="header__filter-button">
+            <i class="ri-filter-3-line"></i>
+            <ul class="header__filter-tags hidden"></ul>
+        </div>
+    </header>
+    <main>
+    </main>
+    <section class="form-container hidden">
+        <form id="form-tag">
+            <div>
+                <div class="form-tag__name">
+                    <i class="ri-price-tag-3-fill"></i>
+                    <input type="text" placeholder="Type a tag name" id="form-tag__name-input" value="" required>
+                </div>
+                <div class="form-tag__color">
+                    <div id="form-tag__color-box"></div>
+                    <input type="text" placeholder="Color name or code" id="form-tag__color-input" value="" required>
+                </div>
+            </div>
+            <div>
+                <input type="submit" id="form__tag-save-button" value="Save">
+            </div>
+        </form>
+    </section>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.2/marked.min.js"></script>
+<script src="js/script.js"></script>
+<script src="js/tags.js"></script>
+<script src="js/search.js"></script>
+<script src="js/filter.js"></script>
+</html>
