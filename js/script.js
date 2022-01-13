@@ -1,4 +1,4 @@
-let tagsObj = {}
+let tagsObj = JSON.parse(localStorage.getItem('tags'));
 
 const addBtn = document.querySelector('.header__add-button');
 
@@ -110,7 +110,7 @@ function createNewNote(title="", text="", tag="default") {
     });
 
     textareaEl.addEventListener('keydown', (ev) =>{
-        //
+        // some key to finish the edit instantly
     });
     
     getTagsFromLocalStorage();
@@ -126,6 +126,7 @@ function createNewNote(title="", text="", tag="default") {
     }
 
     // using the function parameters
+    title == '[object MouseEvent]' ? title = '' : title = title;
     noteTitle.value = title;
     textareaEl.value = text;
     noteText.innerHTML = marked.parse(textareaEl.value);
@@ -143,11 +144,7 @@ function saveNotesInLS(){
     notes.forEach(note =>{
         noteTitles.push(note.querySelector('.note__title').value);
         noteTexts.push(note.querySelector('textarea').value);
-    });
-
-    const noteTagIcons = document.querySelectorAll('.note__tag-icon');
-    noteTagIcons.forEach(noteTagIcon =>{
-        noteTags.push(noteTagIcon.getAttribute('data-tag'));
+        noteTags.push(note.querySelector('.note__tag-icon').getAttribute('data-tag'));
     });
 
     let notesObj = {

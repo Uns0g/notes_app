@@ -20,6 +20,8 @@ if (localStorage.getItem('tags')) {
         addTag(key, storedTags[key]);
     }
     firstTagBox.remove();
+} else{
+    localStorage.setItem('tags', JSON.stringify(tags));
 }
 
 addTagBtn.addEventListener('click', () => {

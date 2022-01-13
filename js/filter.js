@@ -15,8 +15,8 @@ filterButton.addEventListener('click', () =>{
              </li>`;
         }
 
-        let filterMenuItens = filterMenu.querySelectorAll('.header__filter-tag-item');
-        setClickInEachItem(filterMenuItens);
+        let filterMenuItems = filterMenu.querySelectorAll('.header__filter-tag-item');
+        setClickInEachItem(filterMenuItems);
     } else{
         filterMenu.classList.add('hidden');
         filterMenu.innerHTML = '';
