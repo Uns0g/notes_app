@@ -34,4 +34,8 @@ A web application for writing notes that remain saved in your browser.
 - [ ] The other tags' menus fade when the user clicks in another tag.
 - [ ] Improve this own README.
 - [ ] Responsiveness.
-- [ ] Host it in Github pages?
+- [ ] Host it in Github pages?]
+
+## Extras 
+
+Distributed under the GNU General Public License v3.0. See ```LICENSE``` for more information.
