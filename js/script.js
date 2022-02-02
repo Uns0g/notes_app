@@ -19,7 +19,7 @@ function createNewNote(title="", text="", tag="default") {
         <input placeholder="Add A Title" class="note__title">
         <div class="note__buttons">
             <i class="ri-edit-box-line note__edit-button"></i>
-            <i class="ri-check-line note__check-button hidden"></i>
+            <i class="ri-check-fill note__check-button hidden"></i>
             <i class="ri-delete-bin-fill note__delete-button"></i>
         </div>
     </div>
@@ -29,7 +29,7 @@ function createNewNote(title="", text="", tag="default") {
             <select class="note__tag-select">
                 <option disabled selected hidden="true">Select A Tag</option>
             </select>
-            <i class="ri-check-line note__tag-save"></i>
+            <i class="ri-check-fill note__tag-save"></i>
         </div>
         <i class="ri-price-tag-3-fill note__tag-icon" data-tag=""></i>
     </div>

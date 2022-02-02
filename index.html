@@ -28,6 +28,7 @@
                     </ul>
                 </div>
             </div>
+            <button id="tag__see-more"><i class="ri-eye-close-line"></i><i class="ri-eye-line hidden"></i></button>
         </div>
         <div id="header__filter-button">
             <i class="ri-filter-3-line"></i>
@@ -35,6 +36,31 @@
         </div>
     </header>
     <main>
+        <section class="large-tags hidden">
+            <h2>Tags</h2>
+            <hr>
+            <div class="large-tags__container">
+                <div class="large-tag__box">
+                    <i class="ri-close-fill"></i>
+    
+                    <i class="ri-price-tag-3-fill" style="color: var(--primary);"></i>
+                    <div class="large-tag__info">
+                        <span>Name:</span>
+                        <div class="large-tag__info-row">
+                            <input type="text" value="default" disabled>
+                            <button class="large-tag__input-button"><i class="ri-edit-fill"></i></button>
+                            <button class="large-tag__input-button hidden"><i class="ri-check-fill"></i></button>
+                        </div>
+                        <span>Color Code:</span>
+                        <div class="large-tag__info-row" disabled>
+                            <input type="text" value="var(--primary)" disabled>
+                            <button class="large-tag__input-button"><i class="ri-edit-fill"></i></button>
+                            <button class="large-tag__input-button hidden"><i class="ri-check-fill"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
     <section class="form-container hidden">
         <form id="form-tag">
