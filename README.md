@@ -22,10 +22,10 @@ A web application for writing notes that remain saved in your browser.
 - [ ] Fix the issue of the selected tags in filter menu.
 - [ ] A better modal form for the tags.
 - [ ] The other tags' menus fade when the user clicks in another tag.
-- [ ] Add a larger notes section
-- [ ] Add a viewer to all the tags
+- [ ] Add a larger notes section.
+- [ ] Add a viewer to all the tags.
 - [ ] Responsiveness.
-- [ ] Refactor the code and put some order
+- [ ] Refactor the code and organize css files.
 - [ ] Improve this own README.
 - [ ] Host it in Github pages?]
 

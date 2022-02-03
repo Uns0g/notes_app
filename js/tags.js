@@ -1,11 +1,11 @@
 let tags = { default: 'var(--primary)' } // initial value of the tags obj
-let oldTagKey = '';
+let oldTagKey = undefined;
 
 const tagsGrid = document.getElementById('tags__grid');
 const addTagBtn = document.getElementById('tag__add');
 const firstTagBox = document.querySelector('.tag__box:first-of-type');
 firstTagBox.firstElementChild.setAttribute('style', `color: ${tags.default}`);
-setClickListenerInTagBox(firstTagBox);
+setCRUDToTagBox(firstTagBox);
 const seeMoreBtn = document.getElementById('tag__see-more');
 
 const tagForm = document.getElementById('form-tag');
@@ -18,10 +18,10 @@ const largeTags = document.querySelector('.large-tags');
 if (localStorage.getItem('tags')) {
     fillTagsObject();
     for(let key in tags) {
-        addTag(key, tags[key]);
+        createTagInGrid(key, tags[key]);
     }
 
-    firstTagBox.remove();
+    firstTagBox.remove(); // to avoid duplicated default tag box
 } else{
     localStorage.setItem('tags', JSON.stringify(tags));
 }
@@ -40,17 +40,93 @@ tagForm.addEventListener('submit', (e) => {
 
     fillTagsObject();
     if (Object.keys(tags).find(key => key == oldTagKey)) {
-        editTag(tags);
+        updateTagInGrid(tags);
     } else {
-        addTag(formNameInput.value.toLowerCase(), formColorInput.value.toLowerCase());
+        createTagInGrid(formNameInput.value.toLowerCase(), formColorInput.value.toLowerCase());
     }
 
     tagForm.parentElement.classList.add('hidden');
 
-    removeColorValuesInForm();
+    // cleaning the form to further use
+    formNameInput.value = '';
+    formColorInput.value = '';
+    formNameInput.previousElementSibling.removeAttribute('style');
+    formColorInput.previousElementSibling.removeAttribute('style');
 
-    oldTagKey = '';
+    oldTagKey = undefined;
 });
+
+// filling the elements with the typed color in order to see a preview the colours applied  
+formColorInput.addEventListener('input', paintSquareAndIcon);
+function paintSquareAndIcon(){
+    formColorInput.previousElementSibling.setAttribute('style', `background: ${formColorInput.value}`);
+    formNameInput.previousElementSibling.setAttribute('style', `color: ${formColorInput.value}`);
+}
+
+function createTagInGrid(key, value) {
+    tags[key] = value;
+    saveTagsInLS();
+    
+    tagsGrid.insertAdjacentElement("beforeend", firstTagBox.cloneNode(true));
+    let lastTagBox = document.querySelector('.tag__box:last-of-type');
+    lastTagBox.firstElementChild.setAttribute('style', `color: ${value}`);
+    setCRUDToTagBox(lastTagBox);
+    
+    createTagInLargeTagsCtn(key, value)
+}
+
+function updateTagInGrid() {
+    let oldColorValue = tags[oldTagKey];
+
+    let newTagKey = formNameInput.value.toLowerCase();
+    let newColorValue = formColorInput.value.toLowerCase();
+    editTag(newTagKey, newColorValue);
+
+    document.querySelectorAll('.tag__box').forEach(tagBox => {
+        if (tagBox.firstElementChild.getAttribute('style').replace('color: ', '') == oldColorValue) {
+            tagBox.firstElementChild.setAttribute('style', `color: ${newColorValue}`);
+        }
+    });
+
+    document.querySelectorAll('.large-tag__box').forEach(largeTagBox =>{
+        let largeTagBoxIcon = largeTagBox.querySelector('i:last-of-type');
+        if(largeTagBoxIcon.getAttribute('style').replace('color: ', '') == oldColorValue){
+            largeTagBoxIcon.setAttribute('style', `color: ${newColorValue}`);
+            largeTagBox.querySelector('input').value = newTagKey;
+            largeTagBox.querySelector('input:last-of-type').value = newColorValue;
+        }
+    });
+}
+
+function setCRUDToTagBox(tagBoxEl) {
+    tagBoxEl.addEventListener('click', () => {
+        // hiding the filter menu
+        filterMenu.classList.add('hidden');
+        filterMenu.innerHTML = '';
+
+        tagBoxEl.lastElementChild.classList.toggle('hidden');
+
+        const editTagBoxBtn = tagBoxEl.querySelector('.tag__item:first-of-type');
+        const deleteTagBoxBtn = tagBoxEl.querySelector('.tag__item:last-of-type');
+
+        let tagBoxColorValue = tagBoxEl.firstElementChild.getAttribute('style').replace('color: ', '');
+        editTagBoxBtn.addEventListener('click', () => {
+            tagBoxEl.lastElementChild.classList.remove('hidden'); // hiding the menu 
+            
+            tagForm.parentElement.classList.remove('hidden'); // showing the form
+            
+            formNameInput.value = Object.keys(tags).find(key => tags[key] === tagBoxColorValue);
+            formColorInput.value = Object.values(tags).find(value => value === tags[formNameInput.value]);
+            oldTagKey = formNameInput.value;
+            
+            paintSquareAndIcon();
+        });
+        deleteTagBoxBtn.addEventListener('click', () =>{
+            let keyToBeDeleted = Object.keys(tags).find(key => tags[key] === tagBoxColorValue);
+            deleteTag(keyToBeDeleted, tagBoxColorValue);
+        });
+    });
+}
 
 seeMoreBtn.addEventListener('click', () =>{
     seeMoreBtn.firstElementChild.classList.toggle('hidden');
@@ -58,139 +134,97 @@ seeMoreBtn.addEventListener('click', () =>{
     largeTags.classList.toggle('hidden');
 });
 
-function removeColorValuesInForm() {
-    formNameInput.value = '';
-    formColorInput.value = '';
-    formNameInput.previousElementSibling.removeAttribute('style');
-    formColorInput.previousElementSibling.removeAttribute('style');
-}
-
-formColorInput.addEventListener('input', paintBoxAndTagElements);
-
-function paintBoxAndTagElements() {
-    formNameInput.previousElementSibling.setAttribute('style', `color: ${formColorInput.value}`);
-    formColorInput.previousElementSibling.setAttribute('style', `background: ${formColorInput.value}`);
-}
-
-function addTag(key, value) {
-    tags[key] = value;
-    saveTagsInLS();
-
-    tagsGrid.insertAdjacentElement("beforeend", firstTagBox.cloneNode(true));
-    let lastTagBox = document.querySelector('.tag__box:last-of-type');
-    lastTagBox.firstElementChild.setAttribute('style', `color: ${value}`);
-    setClickListenerInTagBox(lastTagBox);
-
-    addTagInLargeTagsCtn(key, value)
-}
-
-function editTag() {
-    let newTagKey = formNameInput.value.toLowerCase();
-
-    let allTagBoxes = document.querySelectorAll('.tag__box');
-    allTagBoxes.forEach(tagBox => {
-        if (tagBox.firstElementChild.getAttribute('style').replace('color: ', '') == tags[oldTagKey]) { // tags[oldTagKey] is the old value
-            delete tags[oldTagKey];
-            tags[newTagKey] = formColorInput.value.toLowerCase();
-            changeTagInNote(newTagKey, formColorInput.value.toLowerCase());
-
-            tagBox.firstElementChild.setAttribute('style', `color: ${tags[newTagKey]}`);
-        }
-    });
-
-    saveTagsInLS();
-}
-
-function setClickListenerInTagBox(tagBox) {
-    tagBox.addEventListener('click', () => {
-        // hiding the filter menu
-        filterMenu.classList.add('hidden');
-        filterMenu.innerHTML = '';
-
-        tagBox.lastElementChild.classList.toggle('hidden');
-
-        const editTagBoxBtn = tagBox.querySelector('.tag__item:first-of-type');
-        const deleteTagBoxBtn = tagBox.querySelector('.tag__item:last-of-type');
-
-        let tagBoxColorValue = tagBox.firstElementChild.getAttribute('style').replace('color: ', '');
-        editTagBoxBtn.addEventListener('click', () => {
-            tagBox.lastElementChild.classList.remove('hidden'); // hiding the menu 
-            
-            tagForm.parentElement.classList.remove('hidden'); // showing the form
-            formNameInput.value = Object.keys(tags).find(key => tags[key] === tagBoxColorValue);
-            formColorInput.value = Object.values(tags).find(value => value === tags[formNameInput.value]);
-            
-            paintBoxAndTagElements();
-            oldTagKey = formNameInput.value;
-        });
-        deleteTagBoxBtn.addEventListener('click', () => {
-            let keyToBeDeleted = Object.keys(tags).find(key => tags[key] === tagBoxColorValue);
-            delete tags[keyToBeDeleted];
-            saveTagsInLS();
-            tagBox.remove();
-        });
-    });
-}
-
-function addTagInLargeTagsCtn(tagName, tagColor){
+function createTagInLargeTagsCtn(tagName, tagColor){
     const largeTagsCtn = largeTags.lastElementChild;
     const largeTagBox = largeTagsCtn.firstElementChild;
-
+    
     largeTagsCtn.appendChild(largeTagBox.cloneNode(true));
     const newBox = largeTagsCtn.querySelector('.large-tag__box:last-of-type') 
-
+    
     newBox.querySelector('i:last-of-type').setAttribute('style', 'color: '+tagColor);
     newBox.querySelector('.large-tag__info-row input').value = tagName;
     newBox.querySelector('.large-tag__info-row:last-of-type input').value = tagColor;
-
+    
+    // to avoid duplicated elements of default tag (happens in reload)
     if(newBox.querySelector('.large-tag__info-row input').value == 'default'){
         largeTagBox.remove();
     }
     
-    addCRUDToTagElement(newBox);
+    setCRUDToLargeTag(newBox);
 }
 
-function addCRUDToTagElement(tagEl){
-    let largeTagDeleteBtn = tagEl.querySelector('i:first-of-type');
+function setCRUDToLargeTag(largeTagEl){
+    let largeTagName = largeTagEl.querySelector('.large-tag__info-row input');
+    let largeTagColor = largeTagEl.querySelector('.large-tag__info-row:last-of-type input');
 
-    let largeTagName = tagEl.querySelector('.large-tag__info-row input');
-    let largeTagEditName = largeTagName.nextElementSibling;
-    let largeTagColor = tagEl.querySelector('.large-tag__info-row:last-of-type input');
-    let largeTagEditColor = largeTagColor.nextElementSibling;
+                                    // edit buttons
+    applyEditionToRowEls(largeTagName, largeTagName.nextElementSibling);
+    applyEditionToRowEls(largeTagColor, largeTagColor.nextElementSibling);
 
-    // create a function to both inputs 
-    largeTagEditName.addEventListener('click', () =>{
-        largeTagName.disabled = false;
-        largeTagName.focus();
-
-        largeTagEditName.classList.add('hidden');
-        largeTagEditName.nextElementSibling.classList.remove('hidden'); 
+    let largeTagDeleteBtn = largeTagEl.querySelector('i:first-of-type');
+    largeTagDeleteBtn.addEventListener('click', () =>{
+        deleteTag(largeTagName.value,largeTagEl);
     });
 
-    largeTagEditName.nextElementSibling.addEventListener('click', () =>{
-        largeTagName.disabled = true;
+    function applyEditionToRowEls(input, button){
+        button.addEventListener('click', () =>{
+            oldTagKey = largeTagName.value;
+    
+            input.disabled = false; 
+            input.focus();
+            
+            button.classList.add('hidden');
+            button.nextElementSibling.classList.remove('hidden');
+        });
+    
+        button.nextElementSibling.addEventListener('click', () =>{
+            input.disabled = true;
+    
+            button.nextElementSibling.classList.add('hidden');
+            button.classList.remove('hidden');
+    
+            // Here I can delete before editing
+            document.querySelectorAll('.tag__box').forEach(tagBox => {
+                if(tagBox.firstElementChild.getAttribute('style').replace('color: ', '') == tags[oldTagKey]){
+                    tagBox.firstElementChild.setAttribute('style', 'color: '+largeTagColor.value);
+                }
+            });
+            
+            let newTagKey = largeTagName.value.toLowerCase();
+            let newColorValue = largeTagColor.value.toLowerCase();
+            editTag(newTagKey, newColorValue);
 
-        largeTagEditName.nextElementSibling.classList.add('hidden');
-        largeTagEditName.classList.remove('hidden');
-    });
+            largeTagEl.querySelector('i:last-of-type').setAttribute('style', 'color: '+newColorValue);
+    
+            oldTagKey = undefined;
+        });
+    }
+}
 
-    // largeTagEditColor.addEventListener('click', () =>{
-    //     largeTagColor.disabled = false;
-    //     largeTagColor.focus();
+// CRUD functions to the tags 
 
-    //     largeTagEditColor.classList.add('hidden');
-    //     largeTagEditColor.nextElementSibling.classList.remove('hidden');
-    // });
+// will always replace the old tag key with a new one, 
+// even if the current key name is equal to the past version of the name
+function editTag(newName, newColor){
+    delete tags[oldTagKey];
+    tags[newName] = newColor;
+    saveTagsInLS();
+
+    changeTagInNotes(newName, newColor);
+}
+function deleteTag(keyToBeDeleted, elementToDisappear){
+    delete tags[keyToBeDeleted];
+    saveTagsInLS();
+
+    elementToDisappear.remove();
 }
 
 // updating the notes with the edited tag
-function changeTagInNote(newName, newColor) {
+function changeTagInNotes(newName, newColor) {
     const allNotes = document.querySelectorAll('.note');
     allNotes.forEach(note =>{
         let noteTagIcon = note.querySelector('.note__tag-icon');
-        let noteTag = noteTagIcon.getAttribute('data-tag');
-        if(noteTag == oldTagKey){
-
+        if(noteTagIcon.getAttribute('data-tag') == oldTagKey){
             note.querySelector('.note__header').setAttribute('style', `background: ${newColor}`);
             note.querySelector('.note__title').setAttribute('style', `background: ${newColor}`);
             noteTagIcon.setAttribute('style', `color: ${newColor}`);
@@ -203,6 +237,7 @@ function changeTagInNote(newName, newColor) {
     });
 }
 
+// general function to hide the 'popup' elements
 function cleanScreen() {
     filterMenu.classList.add('hidden');
     filterMenu.innerHTML = '';
