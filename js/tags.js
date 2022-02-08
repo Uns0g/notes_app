@@ -4,8 +4,7 @@ let oldTagKey = undefined;
 const tagsGrid = document.getElementById('tags__grid');
 const addTagBtn = document.getElementById('tag__add');
 const firstTagBox = document.querySelector('.tag__box:first-of-type');
-firstTagBox.firstElementChild.setAttribute('style', `color: ${tags.default}`);
-setCRUDToTagBox(firstTagBox);
+firstTagBox.firstElementChild.setAttribute('style', `color: ${tags.default}`); 
 const seeMoreBtn = document.getElementById('tag__see-more');
 
 const tagForm = document.getElementById('form-tag');
@@ -67,12 +66,16 @@ function createTagInGrid(key, value) {
     tags[key] = value;
     saveTagsInLS();
 
-    tagsGrid.insertAdjacentElement("beforeend", firstTagBox.cloneNode(true));
     let lastTagBox = document.querySelector('.tag__box:last-of-type');
+    tagsGrid.insertAdjacentElement("beforeend", lastTagBox.cloneNode(true));
+    lastTagBox = document.querySelector('.tag__box:last-of-type');
     lastTagBox.firstElementChild.setAttribute('style', `color: ${value}`);
-    setCRUDToTagBox(lastTagBox);
 
-    createTagInLargeTagsCtn(key, value)
+    if(key != 'default'){
+        setCRUDToTagBox(lastTagBox);
+    }
+
+    createTagInLargeTagsCtn(key, value);
 }
 
 function updateTagInGrid() {
@@ -131,6 +134,10 @@ function setCRUDToTagBox(tagBoxEl) {
             });
 
             deleteTag(keyToBeDeleted, tagBoxEl);
+            
+            oldTagKey = keyToBeDeleted;
+            changeTagInNotes('default', 'var(--primary)');
+            oldTagKey = undefined;
         });
     });
 }
@@ -144,7 +151,7 @@ seeMoreBtn.addEventListener('click', () => {
 
 function createTagInLargeTagsCtn(tagName, tagColor) {
     const largeTagsCtn = largeTags.lastElementChild;
-    const largeTagBox = largeTagsCtn.firstElementChild;
+    const largeTagBox = largeTagsCtn.lastElementChild;
 
     largeTagsCtn.appendChild(largeTagBox.cloneNode(true));
     const newBox = largeTagsCtn.querySelector('.large-tag__box:last-of-type')
@@ -153,17 +160,14 @@ function createTagInLargeTagsCtn(tagName, tagColor) {
     newBox.querySelector('.large-tag__info-row input').value = tagName;
     newBox.querySelector('.large-tag__info-row:last-of-type input').value = tagColor;
 
-    // to avoid duplicated elements of default tag (happens in reload)
-    if (newBox.querySelector('.large-tag__info-row input').value == 'default') {
-        largeTagBox.remove();
-    }
-
-    setCRUDToLargeTag(newBox);
+    // to avoid duplicated elements of default tag and editing in default tag (happens in reload) 
+    tagName != 'default' ? setCRUDToLargeTag(newBox) : largeTagBox.remove()
 }
 
 function setCRUDToLargeTag(largeTagEl) {
     let largeTagName = largeTagEl.querySelector('.large-tag__info-row input');
     let largeTagColor = largeTagEl.querySelector('.large-tag__info-row:last-of-type input');
+
     // edit buttons
     applyEditionToRowEls(largeTagName, largeTagName.nextElementSibling);
     applyEditionToRowEls(largeTagColor, largeTagColor.nextElementSibling);
@@ -177,6 +181,10 @@ function setCRUDToLargeTag(largeTagEl) {
         });
 
         deleteTag(largeTagName.value, largeTagEl);
+
+        oldTagKey = largeTagName.value;
+        changeTagInNotes('default', 'var(--primary)');
+        oldTagKey = undefined;
     });
 
     function applyEditionToRowEls(input, button) {
@@ -190,8 +198,9 @@ function setCRUDToLargeTag(largeTagEl) {
             button.nextElementSibling.classList.remove('hidden');
         });
         button.nextElementSibling.addEventListener('click', () => {
+            input.value = input.value.toLowerCase();
             input.disabled = true;
-    
+
             button.nextElementSibling.classList.add('hidden');
             button.classList.remove('hidden');
     

@@ -126,8 +126,8 @@ function createNewNote(title="", text="", tag="default") {
     }
 
     // using the function parameters
-    title == '[object MouseEvent]' ? title = '' : title = title;
     noteTitle.value = title;
+    noteTitle.value.includes('[object') ? noteTitle.value = '' : noteTitle.value = title
     textareaEl.value = text;
     noteText.innerHTML = marked.parse(textareaEl.value);
     noteTag.setAttribute('data-tag', tag);

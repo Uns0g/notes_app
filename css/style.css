@@ -113,10 +113,14 @@ header{
 #tag__see-more:active{ opacity: initial;}
 
 /************ tags box ************/
-.tags__box{ position: relative;}
+.tag__box:first-of-type:active .tag__icon{
+  box-shadow: -3px 3px 1.5px 1.5px rgba(245, 0, 0, .5),
+              3px -3px 3px 3px rgba(245, 0, 0, .5);
+}
 
 .tag__icon{
   padding: 2px;
+  background-color: #fff;
   border-radius: 4px;
   font-size: 1.6rem;
   cursor: pointer;
@@ -421,7 +425,9 @@ blockquote{
   color: #000;
   font-size: 2.2rem;
   cursor: pointer;
-}.large-tag__box > i:first-of-type:active{ opacity: .7;}
+}
+.large-tag__box > i:first-of-type:active{ opacity: .7;}
+.large-tag__box:first-of-type > i:first-of-type:active{ color: rgba(245, 0, 0, .5);}
 .large-tag__box > i:last-of-type{
   justify-self: center;
   width: 75%;
@@ -457,6 +463,10 @@ blockquote{
   color: var(--primary);
   font-size: 24px;
   cursor: pointer;
+}
+.large-tag__box:first-of-type .large-tag__input-button:active{ 
+  border-color: rgba(245, 0, 0, .5);
+  color: rgba(245, 0, 0, .5);
 }
 
 .hidden{ display: none;}

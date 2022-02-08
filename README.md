@@ -2,7 +2,7 @@
 
 A web application for writing notes that remain saved in your browser (local storage). 
 
-## Using It
+## 'Installing' The App
 
 **With git**
 1. Open your git shell application. 
@@ -18,16 +18,17 @@ A web application for writing notes that remain saved in your browser (local sto
 
 ## To Do
 
-- [ ] A "No note found" message in case there are no notes with the searched title.
+- [x] Fix the bug of the undefined tags in notes.
 - [ ] Fix the issue of the selected tags in filter menu.
-- [ ] A better modal form for the tags.
 - [ ] The other tags' menus fade when the user clicks in another tag.
-- [ ] Add a "larger notes" section.
-- [x] Add a viewer to all the tags.
+- [ ] A modal form for the tags with a close button.
+- [ ] A "No note found" message in case there are no notes with the searched title.
+- [ ] A help button to give the user instructions and a guide to markdown syntax; 
+- [ ] A "larger notes" section.
 - [ ] Responsiveness.
 - [ ] Refactor the code and organize css files.
-- [ ] Improve this own README.
-- [ ] Host it in Github pages?]
+- [ ] Improve this own README and add a section in it to usage of the app.
+- [ ] Host it in Github pages?
 
 ## Extras 
 
