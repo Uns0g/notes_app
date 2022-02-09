@@ -476,4 +476,34 @@ blockquote{
   color: rgba(245, 0, 0, .5);
 }
 
+/******** message ********/
+.message{
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  color: var(--primary);
+}
+.message > div{
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
+
+#message__title{
+  font-size: 2.4rem;
+  text-align: center;
+}
+
+.message__icon{ font-size: 6rem; margin: auto;}
+
+#message__text{ 
+  width: 80%;
+  margin: 10px auto 30px;
+  padding: 10px;
+  background-color: var(--secondary);
+  border-radius: 10px;
+  font-size: 1.8rem; 
+  text-align: center; 
+}
+
 .hidden{ display: none;}
