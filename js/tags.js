@@ -31,9 +31,14 @@ addTagBtn.addEventListener('click', () => {
 
     formNameInput.value = '';
     formColorInput.value = '';
+    paintSquareAndIcon();
+    
     formNameInput.focus();
 });
 
+tagForm.firstElementChild.addEventListener('click', () =>{
+    tagForm.parentElement.classList.add('hidden');
+});
 tagForm.addEventListener('submit', (e) => {
     e.preventDefault();
 

@@ -18,9 +18,8 @@ A web application for writing notes that remain saved in your browser (local sto
 
 ## To Do
 
-- [x] Fix the issue of the selected tags in filter menu.
-- [ ] The other tags' menus fade when the user clicks in another tag.
-- [ ] A modal form for the tags with a close button.
+- [x] The other tags' menus fade when the user clicks in another tag.
+- [x] A modal form for the tags with a close button.
 - [ ] A "No note found" message in case there are no notes with the searched title.
 - [ ] A help button to give the user instructions and a guide to markdown syntax; 
 - [ ] A "larger notes" section.
