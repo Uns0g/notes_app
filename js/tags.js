@@ -26,7 +26,7 @@ if (localStorage.getItem('tags')) {
 }
 
 addTagBtn.addEventListener('click', () => {
-    cleanScreen();
+    cleanScreen(undefined);
     tagForm.parentElement.classList.remove('hidden');
 
     formNameInput.value = '';
@@ -106,7 +106,8 @@ function setCRUDToTagBox(tagBoxEl) {
         // hiding the filter menu
         filterMenu.classList.add('hidden');
         filterMenu.innerHTML = '';
-
+        
+        cleanScreen(tagBoxEl.lastElementChild);
         tagBoxEl.lastElementChild.classList.toggle('hidden');
 
         const editTagBoxBtn = tagBoxEl.querySelector('.tag__item:first-of-type');
@@ -285,14 +286,16 @@ function changeTagInNotes(newName, newColor) {
 }
 
 // general function to hide the 'popup' elements
-function cleanScreen() {
+function cleanScreen(toBeIgnored) {
     filterMenu.classList.add('hidden');
     filterMenu.innerHTML = '';
 
     const allTagsMenu = document.querySelectorAll('.tag__menu');
-    if (allTagsMenu.length > 0) {
-        allTagsMenu.forEach(tagMenu => { tagMenu.classList.add('hidden'); });
-    }
+    allTagsMenu.forEach(tagMenu => { 
+        if(tagMenu != toBeIgnored){
+            tagMenu.classList.add('hidden'); 
+        }
+    });
 }
 
 // localStorageFunctions
