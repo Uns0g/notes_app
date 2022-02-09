@@ -18,8 +18,7 @@ A web application for writing notes that remain saved in your browser (local sto
 
 ## To Do
 
-- [x] Fix the bug of the undefined tags in notes.
-- [ ] Fix the issue of the selected tags in filter menu.
+- [x] Fix the issue of the selected tags in filter menu.
 - [ ] The other tags' menus fade when the user clicks in another tag.
 - [ ] A modal form for the tags with a close button.
 - [ ] A "No note found" message in case there are no notes with the searched title.

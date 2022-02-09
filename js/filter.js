@@ -1,6 +1,8 @@
 const filterButton = document.querySelector('#header__filter-button i');
 const filterMenu = filterButton.nextElementSibling;
 
+let selectedTags = [];
+
 filterButton.addEventListener('click', () =>{
     if(filterMenu.classList.contains('hidden')){
         filterMenu.classList.remove('hidden');
@@ -8,11 +10,19 @@ filterButton.addEventListener('click', () =>{
         getTagsFromLocalStorage();
         let tagsKeys = Object.keys(tagsObj);
         for(let i = 0; i < tagsKeys.length; i++){
-            filterMenu.innerHTML += 
-            `<li class="header__filter-tag-item">
-                <span><i class="ri-price-tag-3-fill header__filter-tag-icon" style="color: ${tags[tagsKeys[i]]}"></i>${tagsKeys[i]}</span>
-                <i class="ri-check-line header__filter-tag-item--checked" style="visibility: hidden"></i>
-             </li>`;
+            if(selectedTags.every(tag => tag != tagsKeys[i])){
+                filterMenu.innerHTML += 
+                `<li class="header__filter-tag-item">
+                    <span><i class="ri-price-tag-3-fill header__filter-tag-icon" style="color: ${tags[tagsKeys[i]]}"></i>${tagsKeys[i]}</span>
+                    <i class="ri-check-line header__filter-tag-item--checked" style="visibility: hidden"></i>
+                </li>`;
+            } else{
+                filterMenu.innerHTML += 
+                `<li class="header__filter-tag-item">
+                    <span><i class="ri-price-tag-3-fill header__filter-tag-icon" style="color: ${tags[tagsKeys[i]]}"></i>${tagsKeys[i]}</span>
+                    <i class="ri-check-line header__filter-tag-item--checked" style="visibility: visible"></i>
+                </li>`;
+            }
         }
 
         let filterMenuItems = filterMenu.querySelectorAll('.header__filter-tag-item');
@@ -24,30 +34,29 @@ filterButton.addEventListener('click', () =>{
 });
 
 function setClickInEachItem(list){
-    let selectedTags = [];
     list.forEach(item =>{
         item.addEventListener('click', () =>{
             if(item.lastElementChild.getAttribute('style').includes('hidden')){
                 selectedTags.push(item.firstElementChild.textContent);
                 item.lastElementChild.setAttribute('style', 'visibility: visible;');
-                hideNotesWithTags(selectedTags);
+                hideNotesWithSelectedTags();
             } else{
                 selectedTags.splice(selectedTags.indexOf(item.firstElementChild.textContent), 1);
                 item.lastElementChild.setAttribute('style', 'visibility: hidden;');
-                hideNotesWithTags(selectedTags);
+                hideNotesWithSelectedTags();
             }
         });
     });
 }
 
-function hideNotesWithTags(tagsList){
+function hideNotesWithSelectedTags(){
     const allNotes = document.querySelectorAll('.note');
     allNotes.forEach(note =>{
-        if(tagsList.length == 0){
+        if(selectedTags.length == 0){
             note.removeAttribute('style');
         } else{
             let tagIcon = note.querySelector('.note__tag-icon')
-            if(tagsList.every(tag => tag != tagIcon.getAttribute('data-tag'))){
+            if(selectedTags.every(tag => tag != tagIcon.getAttribute('data-tag'))){
                 note.setAttribute('style', 'display: none;');
             } else{
                 note.removeAttribute('style');
